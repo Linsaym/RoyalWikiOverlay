@@ -8,15 +8,18 @@ import (
 )
 
 func Open(dbPath string) (*sql.DB, error) {
-	dsn := fmt.Sprintf("file:%s?_foreign_keys=on", dbPath)
-	db, err := sql.Open("sqlite3", dsn)
+	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		return nil, err
 	}
 
 	if err := db.Ping(); err != nil {
-		_ = db.Close()
 		return nil, err
+	}
+
+	_, err = db.Exec(`PRAGMA foreign_keys = ON;`)
+	if err != nil {
+		return nil, fmt.Errorf("enable foreign keys: %w", err)
 	}
 
 	return db, nil

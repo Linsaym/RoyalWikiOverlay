@@ -1,7 +1,8 @@
 package domain
 
 type Monster struct {
-	ID         int64
-	Name       string
-	LocationID int64
+	ID        int64
+	Name      string
+	Items     []Item
+	Locations []Location
 }

@@ -3,26 +3,26 @@ package main
 import (
 	"log"
 	"os"
-	"path/filepath"
 
 	"RoyalWikiOverlay/infrastructure/sqlite"
 )
 
 func main() {
-	dbPath := filepath.Join("data", "app.db")
-	if err := os.MkdirAll(filepath.Dir(dbPath), 0o755); err != nil {
-		log.Fatalf("failed to create data dir: %v", err)
+	dbPath := "data/app.db"
+
+	if err := os.MkdirAll("data", 0755); err != nil {
+		log.Fatal(err)
 	}
 
 	db, err := sqlite.Open(dbPath)
 	if err != nil {
-		log.Fatalf("failed to open db: %v", err)
+		log.Fatal(err)
 	}
 	defer db.Close()
 
-	if err := sqlite.ApplyMigrations(db); err != nil {
-		log.Fatalf("failed to apply migrations: %v", err)
+	if err := sqlite.RunMigrations(db); err != nil {
+		log.Fatal(err)
 	}
 
-	log.Printf("db initialized at %s", dbPath)
+	log.Println("Database initialized successfully")
 }
