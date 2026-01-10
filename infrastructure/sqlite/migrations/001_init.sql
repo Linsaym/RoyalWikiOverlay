@@ -1,0 +1,29 @@
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS locations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  price INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS monsters (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  location_id INTEGER NOT NULL,
+  UNIQUE(name, location_id),
+  FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS monster_drops (
+  monster_id INTEGER NOT NULL,
+  item_id INTEGER NOT NULL,
+  chance REAL,
+  PRIMARY KEY (monster_id, item_id),
+  FOREIGN KEY (monster_id) REFERENCES monsters(id) ON DELETE CASCADE,
+  FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
+);
