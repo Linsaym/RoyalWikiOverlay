@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	dbPath := "data/app.db"
+	dbPath := "data/royalwiki.db"
 
 	if err := os.MkdirAll("data", 0755); err != nil {
 		log.Fatal(err)
