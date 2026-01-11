@@ -29,3 +29,6 @@ CREATE TABLE IF NOT EXISTS monster_locations (
                                                  location_id INTEGER NOT NULL,
                                                  PRIMARY KEY (monster_id, location_id)
     );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_items_name_unique
+    ON items (name);

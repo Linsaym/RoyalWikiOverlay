@@ -6,3 +6,5 @@ type Monster struct {
 	Items     []Item
 	Locations []Location
 }
+
+//TODO добавить колонку "тип" босс/элитка/обычный
