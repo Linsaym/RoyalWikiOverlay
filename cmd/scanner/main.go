@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"encoding/csv"
 	"fmt"
 	"image"
+	"image/jpeg"
 	"log"
 	"os"
 	"strconv"
@@ -12,10 +14,11 @@ import (
 
 	"github.com/go-vgo/robotgo"
 	"github.com/otiai10/gosseract/v2"
+	hook "github.com/robotn/gohook"
 )
 
 const (
-	outputCSV  = "market_scan.csv"
+	outputCSV  = "data/market_scan.csv"
 	fps        = 4
 	dateLayout = "2006-01-02"
 	timeLayout = "15:04:05"
@@ -30,16 +33,29 @@ type MarketRow struct {
 	Time     string
 }
 
+// TODO Хуета ёбанная не может блять нормально распознавать сука
 func main() {
-	fmt.Println("🖱️ Кликни ПЕРВУЮ точку области рынка")
-	x1, y1 := robotgo.GetMousePos()
-	robotgo.MouseClick("left")
+	hook.AddEvent("mleft")
+	evChan := hook.Start()
+	defer hook.End()
 
-	time.Sleep(2 * time.Second)
+	var x1, y1, x2, y2 int
+
+	fmt.Println("🖱️ Кликни ПЕРВУЮ точку области рынка")
+	for ev := range evChan {
+		if ev.Kind == hook.MouseDown && ev.Button == hook.MouseMap["left"] {
+			x1, y1 = int(ev.X), int(ev.Y)
+			break
+		}
+	}
 
 	fmt.Println("🖱️ Кликни ВТОРУЮ точку области рынка")
-	x2, y2 := robotgo.GetMousePos()
-	robotgo.MouseClick("left")
+	for ev := range evChan {
+		if ev.Kind == hook.MouseDown && ev.Button == hook.MouseMap["left"] {
+			x2, y2 = int(ev.X), int(ev.Y)
+			break
+		}
+	}
 
 	rect := normalizeRect(x1, y1, x2, y2)
 	fmt.Printf("📐 Область: %+v\n", rect)
@@ -56,6 +72,8 @@ func main() {
 	existing := loadExisting(file)
 
 	client := gosseract.NewClient()
+	client.SetTessdataPrefix("C:\\Program Files\\Tesseract-OCR\\tessdata")
+	client.Languages = []string{"eng", "rus"}
 	defer client.Close()
 
 	ticker := time.NewTicker(time.Second / fps)
@@ -64,18 +82,34 @@ func main() {
 	fmt.Println("📸 Сканирование рынка запущено... (Ctrl+C для выхода)")
 
 	for range ticker.C {
-		img, _ := robotgo.CaptureImg(rect)
+		img, _ := robotgo.CaptureImg(rect.Min.X, rect.Min.Y, rect.Max.X-rect.Min.X, rect.Max.Y-rect.Min.Y)
 		if img == nil {
+			fmt.Println("Failed to capture image")
 			continue
 		}
 
-		client.SetImageFromBytes(imageToBytes(img))
+		fmt.Println("Captured image successfully")
+
+		// Save for debugging
+		robotgo.Save(img, "debug_capture.jpg")
+
+		err := client.SetImageFromBytes(imageToBytes(img))
+		if err != nil {
+			fmt.Println("Error setting image:", err)
+			return
+		}
+
 		text, err := client.Text()
 		if err != nil {
+			fmt.Println("Error getting text:", err)
 			continue
 		}
 
+		fmt.Println("OCR Text:", text)
+
 		rows := parseMarketText(text)
+		fmt.Println("Parsed rows:", len(rows))
+
 		now := time.Now()
 
 		for _, r := range rows {
@@ -87,7 +121,7 @@ func main() {
 				continue
 			}
 
-			writer.Write([]string{
+			err := writer.Write([]string{
 				r.Item,
 				strconv.Itoa(r.Quantity),
 				strconv.Itoa(r.Price),
@@ -95,6 +129,9 @@ func main() {
 				r.Date,
 				r.Time,
 			})
+			if err != nil {
+				return
+			}
 			existing[key] = true
 			writer.Flush()
 
@@ -104,16 +141,17 @@ func main() {
 }
 
 func normalizeRect(x1, y1, x2, y2 int) image.Rectangle {
-	minX := min(x1, x2)
-	minY := min(y1, y2)
-	maxX := max(x1, x2)
-	maxY := max(y1, y2)
+	minX := getMin(x1, x2)
+	minY := getMin(y1, y2)
+	maxX := getMax(x1, x2)
+	maxY := getMax(y1, y2)
 	return image.Rect(minX, minY, maxX, maxY)
 }
 
 func imageToBytes(img image.Image) []byte {
-	buf := robotgo.ToBitmapBytes(img)
-	return buf
+	buf := new(bytes.Buffer)
+	jpeg.Encode(buf, img, &jpeg.Options{Quality: 90})
+	return buf.Bytes()
 }
 
 func parseMarketText(text string) []MarketRow {
@@ -154,7 +192,10 @@ func dedupeKey(r MarketRow) string {
 }
 
 func loadExisting(f *os.File) map[string]bool {
-	f.Seek(0, 0)
+	_, err := f.Seek(0, 0)
+	if err != nil {
+		return nil
+	}
 	r := csv.NewReader(f)
 	rows, _ := r.ReadAll()
 
@@ -174,14 +215,14 @@ func loadExisting(f *os.File) map[string]bool {
 	return m
 }
 
-func min(a, b int) int {
+func getMin(a, b int) int {
 	if a < b {
 		return a
 	}
 	return b
 }
 
-func max(a, b int) int {
+func getMax(a, b int) int {
 	if a > b {
 		return a
 	}

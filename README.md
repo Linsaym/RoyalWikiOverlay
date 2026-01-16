@@ -81,9 +81,10 @@ data/
 * <a href="https://github.com/UB-Mannheim/tesseract/wiki">Tesseract для сканера рынка с распознаванием текста</a>
 
 ---
-При запуски команд в терминале:
+Для работы с gosseract нужно установить MSYS2 и потом выполнить(в MSYS2):
 ```bash
-$env:CGO_ENABLED=1
+pacman -S mingw-w64-x86_64-leptonica
+pacman -S mingw-w64-x86_64-tesseract-ocr
 ```
 ---
 ## 🚧 Статус проекта
