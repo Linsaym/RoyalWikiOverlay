@@ -1,0 +1,15 @@
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\bin\Debug\net10.0-windows\RoyalWikiOverlay.exe
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\bin\Debug\net10.0-windows\RoyalWikiOverlay.deps.json
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\bin\Debug\net10.0-windows\RoyalWikiOverlay.runtimeconfig.json
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\bin\Debug\net10.0-windows\RoyalWikiOverlay.dll
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\bin\Debug\net10.0-windows\RoyalWikiOverlay.pdb
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\obj\Debug\net10.0-windows\RoyalWikiOverlay.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\obj\Debug\net10.0-windows\RoyalWikiOverlay.AssemblyInfoInputs.cache
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\obj\Debug\net10.0-windows\RoyalWikiOverlay.AssemblyInfo.cs
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\obj\Debug\net10.0-windows\RoyalWikiOverlay.csproj.CoreCompileInputs.cache
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\obj\Debug\net10.0-windows\RoyalWikiOverlay.sourcelink.json
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\obj\Debug\net10.0-windows\RoyalWikiOverlay.dll
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\obj\Debug\net10.0-windows\refint\RoyalWikiOverlay.dll
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\obj\Debug\net10.0-windows\RoyalWikiOverlay.pdb
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\obj\Debug\net10.0-windows\RoyalWikiOverlay.genruntimeconfig.cache
+C:\Users\Lev\Desktop\RoyalWikiOverlay\cmd\app\RoyalWikiOverlay\obj\Debug\net10.0-windows\ref\RoyalWikiOverlay.dll
